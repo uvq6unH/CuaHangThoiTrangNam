@@ -32,10 +32,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result->num_rows > 0) {
             $message = 'Username, Email, or Phone number already exists! Please choose another.';
         } else {
+            // Hash mật khẩu
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
             // Lưu thông tin người dùng vào cơ sở dữ liệu
             $sql = "INSERT INTO user (USERNAME, PASSWORD, ADDRESS, ROLE, EMAIL, PHONE, CREATED_DATE, ISACTIVE ) VALUES (?, ?, ?, 'user', ?, ?, NOW(), 1)";
             $stmt = $conn->prepare($sql);
-            $stmt->bind_param("sssss", $username, $password, $address, $email, $phone); // Không băm mật khẩu
+            $stmt->bind_param("sssss", $username, $hashedPassword, $address, $email, $phone); // Lưu mật khẩu đã băm
 
             if ($stmt->execute()) {
                 $message = 'Sign up successfully!';

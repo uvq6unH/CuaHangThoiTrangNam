@@ -5,6 +5,7 @@ $message = '';
 $redirect = false; // Biến để kiểm tra có chuyển hướng hay không
 include "auth.php";
 include 'db.php';
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Lấy thông tin từ form
@@ -21,8 +22,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
         $row = $result->fetch_assoc();
 
-        // So sánh mật khẩu nhập vào với mật khẩu từ cơ sở dữ liệu
-        if ($password === $row['PASSWORD']) { // Không sử dụng hash mật khẩu
+        // Debug: Kiểm tra việc sử dụng password_verify
+        if (password_verify($password, $row['PASSWORD'])) {
             // Đăng nhập thành công
             $_SESSION['username'] = $row['USERNAME'];
             $_SESSION['user_id'] = $row['ID']; // Lưu ID người dùng vào session
